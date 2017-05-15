@@ -1,0 +1,19 @@
+<ion-view view-title="Tableau de bord" class="toto">
+	<div class="bar bar-subheader bar-stable" ng-controller="countCtrl"> 
+	    <!-- show only if countdown is running -->
+    	<div class="timerLib">Fin de la course dans  {{countdown | secondsToDateTime | date:'HH:mm:ss'}}</div>
+    	<button ng-click="start()" class="btnTimer"> Go !</button>
+	</div>
+	<div >
+	    <ion-content>
+		    <h1 class="title-dash">Tableau de bord {{loginData.username}}</h1>
+		    <div class="btnPhoto"> 
+			    <button class="button button-stable" ng-click="addImage()">
+				  <i class="icon ion-ios-camera"></i>
+			  	</button><br><br>
+		    </div>
+		  	<ion-scroll class="recPhoto">
+			  <img ng-repeat="image in images" ng-src="{{urlForImage(image)}}" height="200px"/>
+		  	</ion-scroll>
+		</ion-content></div>
+</ion-view>
