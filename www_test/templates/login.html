@@ -1,0 +1,29 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title">Login</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeLogin()">Close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content class="item-content">
+    <form ng-submit="doLogin()">
+      <div class="connexion">
+        <div>
+          <img src="img/LogoFinal.png" class="TypoLogoFinal2">
+        </div>
+        <label>
+          <span >Username</span>
+          <input type="text" ng-model="loginData.username" class="connexion2">
+        </label>
+        <label >
+          <span >Password</span>
+          <input type="password" ng-model="loginData.password" class="connexion2">
+        </label>
+        <br>
+        <label>
+          <button class="button button-large button-stable btnLogin" type="submit">C'est parti <i class="icon ion-ios-arrow-thin-right"></i></button>
+        </label>
+      </div>
+    </form>
+  </ion-content>
+</ion-modal-view>

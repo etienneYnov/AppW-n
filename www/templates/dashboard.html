@@ -1,8 +1,7 @@
-<ion-view view-title="Tableau de bord" class="toto">
+<ion-view view-title="Tableau de bord">
 	<div class="bar bar-subheader bar-stable" ng-controller="countCtrl"> 
 	    <!-- show only if countdown is running -->
     	<div class="timerLib">Fin de la course dans  {{countdown | secondsToDateTime | date:'HH:mm:ss'}}</div>
-    	<button ng-click="start()" class="btnTimer"> Go !</button>
 	</div>
 	<div >
 	    <ion-content>
