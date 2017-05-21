@@ -44,8 +44,8 @@ angular.module('starter.controllers', [])
 
     // Perform the login action when the user submits the login form
     $scope.doLogin = function () {
-      console.log('Doing login', $scope.loginData);
-      console.log($scope.counter);
+      //console.log('Doing login', $scope.loginData);
+      //console.log($scope.counter);
 
 
 
@@ -170,8 +170,8 @@ angular.module('starter.controllers', [])
       };
 
       // $cordovaGeolocation.getCurrentPosition(posOptions).then(function (position) {
-      // var lat = position.coords.latitude;
-      // var long = position.coords.longitude;
+      //var lat = position.coords.latitude;
+      //var long = position.coords.longitude;
       // Debug values...
       var lat = 47.208796;
       var long = -1.550337;
@@ -188,11 +188,20 @@ angular.module('starter.controllers', [])
         template: 'géolocalisation en cours...'
       });
 
+      
+
 
       navigator.geolocation.getCurrentPosition(function(position) {
         var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
         $scope.positions.push({lat: pos.k,lng: pos.B});
-        console.log(pos);
+        // console.log('Position de la Target: ' + $scope.etape);
+        // console.log('Latitude de la cible en cours: ' + $scope.targetLat);
+        // console.log('Longitude de la cible en cours: ' + $scope.targetLng);
+        // console.log('----------------------------------')        
+        // console.log('Latitude du candidat en cours: ' + position.coords.latitude);
+        // console.log('Longitude du candidat en cours: ' + position.coords.longitude);
+        $scope.posLat = parseFloat(position.coords.latitude) ;
+        $scope.posLong = parseFloat(position.coords.longitude) ;
         $scope.map.setCenter(pos);
         $ionicLoading.hide();
         });
@@ -304,6 +313,33 @@ angular.module('starter.controllers', [])
          * @param {integer} cursor
          */
         const addMarker = function (cursor) {
+
+
+
+
+
+
+        function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+                var R = 6371; // Radius of the earth in km
+                var dLat = deg2rad(lat2-lat1);  // deg2rad below
+                var dLon = deg2rad(lon2-lon1); 
+                var a = 
+                  Math.sin(dLat/2) * Math.sin(dLat/2) +
+                  Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+                  Math.sin(dLon/2) * Math.sin(dLon/2)
+                  ; 
+                var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+                var d = R * c; // Distance in km
+                return d;
+              };
+
+              function deg2rad(deg) {
+                return deg * (Math.PI/180)
+              };
+
+
+
+
           let infowindow = new google.maps.InfoWindow();
           let currentMarker = null;
           if ($locations[cursor]) {
@@ -320,6 +356,30 @@ angular.module('starter.controllers', [])
                 infowindow.setContent($locations[marker_cursor][0]);
                 infowindow.open(map, marker);
                 currentMarker = this;
+                //console.log(currentMarker.position);
+                $scope.etape = currentMarker.position;
+                $scope.targetLat = parseFloat($locations[cursor][1]);
+                $scope.targetLng = parseFloat($locations[cursor][2]);
+                $scope.distanceMetre = parseInt(getDistanceFromLatLonInKm($scope.targetLat, $scope.targetLng, $scope.posLat, $scope.posLong) * 1000);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                console.log('----------------------------------')
+                console.log('Position de la Target: ' + $scope.etape);
+                console.log('Latitude de la cible en cours: ' + $scope.targetLat);
+                console.log('Longitude de la cible en cours: ' + $scope.targetLng);
+                console.log('----------------------------------');
+                console.log('Latitude du candidat en cours: ' + $scope.posLat);
+                console.log('Longitude du candidat en cours: ' + $scope.posLong);
+
+                console.log('Distance en kilomètres: ' + getDistanceFromLatLonInKm($scope.targetLat, $scope.targetLng, $scope.posLat, $scope.posLong) + ' km.');
+                console.log('Distance en mètres: ' + $scope.distanceMetre + ' Mètres.');
+                
+                //console.log($scope.etape);
+                //console.log('Latitude de la cible en cours: ' + $locations[cursor][1]);
+                //console.log('Longitude de la cible en cours: ' + $locations[cursor][2]);
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               }
             })(marker, cursor));
 
@@ -337,7 +397,7 @@ angular.module('starter.controllers', [])
             }, 750);
           } else {
             // End of the road
-            alert('Pas d\'autre étape, parcours terminé, que faire ?');
+            alert('Félicitations ! Vous avez franchi toutes les étapes ! Rendez vous au point de ralliement !');
           }
         };
         /*
@@ -347,14 +407,14 @@ angular.module('starter.controllers', [])
       });
       */
 
-      console.log("Ctrl");
+      //console.log("Ctrl");
 
-      $scope.lastMarket = null;
+      $scope.lastMarker = null;
       window.setInterval(function(){
-        console.log("___________________________________");  
-        console.log( $scope.lastMarket);
+        //console.log("___________________________________");  
+        //console.log( $scope.lastMarker);
         navigator.geolocation.getCurrentPosition(function(position) {
-            console.log($scope.lastMarket);
+            //console.log($scope.lastMarker);
 
             var pos = {
               lat: position.coords.latitude,
@@ -362,16 +422,16 @@ angular.module('starter.controllers', [])
             };
 
 
-            if($scope.lastMarket != null)
-              $scope.lastMarket.setMap(null);
+            if($scope.lastMarker != null)
+              $scope.lastMarker.setMap(null);
 
 
-            $scope.lastMarket = new google.maps.Marker({
+            $scope.lastMarker = new google.maps.Marker({
               position: pos,
               //icon: "/img/ionic.png",
               map: map
             });
-            console.log(self);
+            //console.log(self);
             
             //map.setCenter(pos);
           }, function() {
