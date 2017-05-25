@@ -154,14 +154,10 @@ angular.module('starter.controllers', [])
 
 
 
-  .controller('MapCtrl', function ($scope, $cordovaGeolocation, $ionicLoading, $ionicPlatform) {
+  .controller('MapCtrl', function ($scope, $cordovaGeolocation, $ionicLoading, $ionicPlatform, $ionicPopup) {
     $ionicPlatform.ready(function () {
 
-      /*
-      $ionicLoading.show({
-        template: '<ion-spinner icon="bubbles"></ion-spinner><br/>En cours de géolocalisation...'
-      });
-      */
+     
 
       var posOptions = {
         enableHighAccuracy: true,
@@ -193,17 +189,53 @@ angular.module('starter.controllers', [])
 
       navigator.geolocation.getCurrentPosition(function(position) {
         var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+                var R = 6371; // Radius of the earth in km
+                var dLat = deg2rad(lat2-lat1);  // deg2rad below
+                var dLon = deg2rad(lon2-lon1); 
+                var a = 
+                  Math.sin(dLat/2) * Math.sin(dLat/2) +
+                  Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+                  Math.sin(dLon/2) * Math.sin(dLon/2)
+                  ; 
+                var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+                var d = R * c; // Distance in km
+                return d;
+              };
+
+              function deg2rad(deg) {
+                return deg * (Math.PI/180)
+              };
         $scope.positions.push({lat: pos.k,lng: pos.B});
-        // console.log('Position de la Target: ' + $scope.etape);
-        // console.log('Latitude de la cible en cours: ' + $scope.targetLat);
-        // console.log('Longitude de la cible en cours: ' + $scope.targetLng);
-        // console.log('----------------------------------')        
-        // console.log('Latitude du candidat en cours: ' + position.coords.latitude);
-        // console.log('Longitude du candidat en cours: ' + position.coords.longitude);
         $scope.posLat = parseFloat(position.coords.latitude) ;
         $scope.posLong = parseFloat(position.coords.longitude) ;
+        $scope.distanceMetre = parseInt(getDistanceFromLatLonInKm($scope.targetLat, $scope.targetLng, $scope.posLat, $scope.posLong) * 1000);
         $scope.map.setCenter(pos);
         $ionicLoading.hide();
+        if ($scope.distanceMetre == 150) {
+          $scope.showAlert = function() {
+             var alertPopup = $ionicPopup.alert({
+               title: 'Vous approchez !',
+               template: $scope.txtInfo
+             });
+
+             alertPopup.then(function(res) {
+               console.log('Ca marche bien.');
+               console.log($scope.txtInfo);
+             });
+
+          };
+          $scope.showAlert();
+        };
+        
+        console.log('Position de la Target: ' + $scope.etape);
+        console.log('Latitude de la cible en cours: ' + $scope.targetLat);
+        console.log('Longitude de la cible en cours: ' + $scope.targetLng);
+        console.log('----------------------------------')        
+        console.log('Latitude du candidat en cours: ' + position.coords.latitude);
+        console.log('Longitude du candidat en cours: ' + position.coords.longitude);
+        console.log('Distance en kilomètres: ' + getDistanceFromLatLonInKm($scope.targetLat, $scope.targetLng, $scope.posLat, $scope.posLong) + ' km.');
+        console.log('Distance en mètres: ' + $scope.distanceMetre + ' Mètres.');
         });
 
       };                    
@@ -361,10 +393,10 @@ angular.module('starter.controllers', [])
                 $scope.targetLat = parseFloat($locations[cursor][1]);
                 $scope.targetLng = parseFloat($locations[cursor][2]);
                 $scope.distanceMetre = parseInt(getDistanceFromLatLonInKm($scope.targetLat, $scope.targetLng, $scope.posLat, $scope.posLong) * 1000);
-
+                $scope.txtInfo = $locations[marker_cursor][0];
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-                console.log('----------------------------------')
+                /*console.log('----------------------------------')
                 console.log('Position de la Target: ' + $scope.etape);
                 console.log('Latitude de la cible en cours: ' + $scope.targetLat);
                 console.log('Longitude de la cible en cours: ' + $scope.targetLng);
@@ -373,11 +405,12 @@ angular.module('starter.controllers', [])
                 console.log('Longitude du candidat en cours: ' + $scope.posLong);
 
                 console.log('Distance en kilomètres: ' + getDistanceFromLatLonInKm($scope.targetLat, $scope.targetLng, $scope.posLat, $scope.posLong) + ' km.');
-                console.log('Distance en mètres: ' + $scope.distanceMetre + ' Mètres.');
+                console.log('Distance en mètres: ' + $scope.distanceMetre + ' Mètres.');*/
                 
                 //console.log($scope.etape);
                 //console.log('Latitude de la cible en cours: ' + $locations[cursor][1]);
                 //console.log('Longitude de la cible en cours: ' + $locations[cursor][2]);
+                //console.log($scope.txtInfo);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               }
