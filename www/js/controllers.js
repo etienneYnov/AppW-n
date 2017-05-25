@@ -510,7 +510,18 @@ angular.module('starter.controllers', [])
 
 
 
-  .controller('DashCtrl', function ($scope, $cordovaCamera, $cordovaFile) {
+  .controller('DashCtrl', function ($scope, $cordovaCamera, $cordovaFile, $cordovaBarcodeScanner) {
+  
+    $scope.scanBarcode = function() {
+        $cordovaBarcodeScanner.scan().then(function(imageData) {
+            alert(imageData.text);
+            console.log("Barcode Format -> " + imageData.format);
+            console.log("Cancelled -> " + imageData.cancelled);
+        }, function(error) {
+            console.log("An error happened -> " + error);
+        });
+    };
+
 
 
     // 1
@@ -588,6 +599,7 @@ angular.module('starter.controllers', [])
       var trueOrigin = cordova.file.dataDirectory + name;
       return trueOrigin;
     }
+
   })
 
   .controller('shareCtrl', ['$scope', function ($scope) {
