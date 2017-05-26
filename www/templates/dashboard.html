@@ -6,9 +6,12 @@
 	<div >
 	    <ion-content>
 		    <h1 class="title-dash">Tableau de bord {{loginData.username}}</h1>
-		    <button class="button" ng-click="scanBarcode()">QR Code</button>
 		    <div class="btnPhoto"> 
-			    <button class="button button-stable" ng-click="addImage()">
+		    	<button class="button button-light" ng-click="share('t','#runtowan','','')">
+			      <i class="icon ion-social-twitter"></i>
+			    </button>
+		    	<button class="button button-light" ng-click="scanBarcode()">QR Code</button>
+			    <button class="button button-light" ng-click="addImage()">
 				  <i class="icon ion-ios-camera"></i>
 			  	</button><br><br>
 		    </div>
