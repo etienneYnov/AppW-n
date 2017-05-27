@@ -228,7 +228,7 @@ angular.module('starter.controllers', [])
                };
                $scope.showAlert();
              }
-             else if ($scope.distanceMetre == 5164) {
+             else if ($scope.distanceMetre < 15) {
                 $scope.showAlert = function() {
                  var alertPopup = $ionicPopup.alert({
                    title: 'Bravo, vous avez atteind votre destination !',
