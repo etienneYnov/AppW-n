@@ -105,15 +105,6 @@ angular.module('starter', ['ionic', 'starter.controllers','ngCordova'])
         templateUrl: 'templates/team.html'
       }
     }
-  })
-  .state('app.share', {
-    url: "/share",
-    views: {
-      'menuContent': {
-        templateUrl: "templates/share.html",
-        controller: 'shareCtrl'
-      }
-    }
   });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/home');

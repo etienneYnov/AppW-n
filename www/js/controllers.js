@@ -189,6 +189,7 @@ angular.module('starter.controllers', [])
 
         navigator.geolocation.getCurrentPosition(function(position) {
           var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
           function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
                 var R = 6371; // Radius of the earth in km
                 var dLat = deg2rad(lat2-lat1);  // deg2rad below
@@ -226,6 +227,22 @@ angular.module('starter.controllers', [])
 
                };
                $scope.showAlert();
+             }
+             else if ($scope.distanceMetre == 5164) {
+                $scope.showAlert = function() {
+                 var alertPopup = $ionicPopup.alert({
+                   title: 'Bravo, vous avez atteind votre destination !',
+                   template: 'Vous devez réaliser toutes les épreuves de cette étape avant de pousuivre votre course <br> Bon courage ! '
+                 });
+
+                 alertPopup.then(function(res) {
+                   console.log('Ca marche bien aussi.');
+                   
+                 });
+
+               };
+               $scope.showAlert();
+               
              };
 
              console.log('Position de la Target: ' + $scope.etape);
@@ -373,7 +390,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function () {
 
 
               let infowindow = new google.maps.InfoWindow();
-              let currentMarker = null;
+              $scope.currentMarker = null;
               if ($locations[cursor]) {
             // Create marker
             marker = new google.maps.Marker({
@@ -387,9 +404,9 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function () {
               return function () {
                 infowindow.setContent($locations[marker_cursor][0]);
                 infowindow.open(map, marker);
-                currentMarker = this;
+                $scope.currentMarker = this;
                 //console.log(currentMarker.position);
-                $scope.etape = currentMarker.position;
+                $scope.etape = $scope.currentMarker.position;
                 $scope.targetLat = parseFloat($locations[cursor][1]);
                 $scope.targetLng = parseFloat($locations[cursor][2]);
                 $scope.distanceMetre = parseInt(getDistanceFromLatLonInKm($scope.targetLat, $scope.targetLng, $scope.posLat, $scope.posLong) * 1000);
@@ -420,7 +437,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function () {
             // Add close event listener on marker information window
             google.maps.event.addListener(infowindow, 'closeclick', (function (marker, marker_cursor) {
               return function () {
-                currentMarker.setMap(null);
+                $scope.currentMarker.setMap(null);
                 addMarker(++cursor);
               }
             })(marker, cursor));
@@ -528,6 +545,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function () {
   $scope.scanBarcode = function() {
     $cordovaBarcodeScanner.scan().then(function(imageData) {
       alert(imageData.text, "Super", "Go");
+
       console.log("Barcode Format -> " + imageData.format);
       console.log("Cancelled -> " + imageData.cancelled);
     }, function(error) {
@@ -546,7 +564,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function () {
 
       var options = {
         destinationType: Camera.DestinationType.FILE_URI,
-        sourceType: Camera.PictureSourceType.CAMERA, // Camera.PictureSourceType.PHOTOLIBRARY
+        sourceType: Camera.PictureSourceType.CAMERA,
         allowEdit: false,
         encodingType: Camera.EncodingType.JPEG,
         popoverOptions: CameraPopoverOptions,
@@ -586,6 +604,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function () {
         function onCopySuccess(entry) {
           $scope.$apply(function () {
             $scope.images.push(entry.nativeURL);
+
           });
 
         }
