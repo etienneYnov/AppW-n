@@ -15,6 +15,8 @@
 				  <i class="icon ion-ios-camera"></i>
 			  	</button><br><br>
 		    </div>
+		    <div>{{selectedImage}}</div>
+		    <div>{{$scope.actions}}</div>
 		  	<ion-scroll class="recPhoto">
 			  <img ng-repeat="image in images" ng-src="{{urlForImage(image)}}" height="200px"/>
 		  	</ion-scroll>

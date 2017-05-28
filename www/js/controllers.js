@@ -156,9 +156,6 @@ angular.module('starter.controllers', [])
 
 .controller('MapCtrl', function ($scope, $cordovaGeolocation, $ionicLoading, $ionicPlatform, $ionicPopup) {
   $ionicPlatform.ready(function () {
-
-
-
     var posOptions = {
       enableHighAccuracy: true,
       timeout: 20000,
@@ -169,163 +166,158 @@ angular.module('starter.controllers', [])
       //var lat = position.coords.latitude;
       //var long = position.coords.longitude;
       // Debug values...
-      var lat = 47.208796;
-      var long = -1.550337;
-      $username = 'Team_Spoutnik';
+    var lat = 47.208796;
+    var long = -1.550337;
+    $username = 'Team_Spoutnik';
 
-      var myLatlng = new google.maps.LatLng(lat, long);
-
-
-      $scope.centerOnMe= function(){
-        $scope.positions = [];
+    var myLatlng = new google.maps.LatLng(lat, long);
 
 
-        $ionicLoading.show({
-          template: 'géolocalisation en cours...'
-        });
+    $scope.centerOnMe= function(){
+      $scope.positions = [];
+
+
+      $ionicLoading.show({
+        template: 'géolocalisation en cours...'
+      });
 
 
 
 
-        navigator.geolocation.getCurrentPosition(function(position) {
-          var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      navigator.geolocation.getCurrentPosition(function(position) {
+        var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
-          function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
-                var R = 6371; // Radius of the earth in km
-                var dLat = deg2rad(lat2-lat1);  // deg2rad below
-                var dLon = deg2rad(lon2-lon1); 
-                var a = 
-                Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
-                Math.sin(dLon/2) * Math.sin(dLon/2)
-                ; 
-                var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-                var d = R * c; // Distance in km
-                return d;
-              };
+        function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+          var R = 6371; // Radius of the earth in km
+          var dLat = deg2rad(lat2-lat1);  // deg2rad below
+          var dLon = deg2rad(lon2-lon1); 
+          var a = 
+          Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+          Math.sin(dLon/2) * Math.sin(dLon/2)
+          ; 
+          var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+          var d = R * c; // Distance in km
+          return d;
+        };
 
-              function deg2rad(deg) {
-                return deg * (Math.PI/180)
-              };
-              $scope.positions.push({lat: pos.k,lng: pos.B});
-              $scope.posLat = parseFloat(position.coords.latitude) ;
-              $scope.posLong = parseFloat(position.coords.longitude) ;
-              $scope.distanceMetre = parseInt(getDistanceFromLatLonInKm($scope.targetLat, $scope.targetLng, $scope.posLat, $scope.posLong) * 1000);
-              $scope.map.setCenter(pos);
-              $ionicLoading.hide();
-              if ($scope.distanceMetre == 150) {
-                $scope.showAlert = function() {
-                 var alertPopup = $ionicPopup.alert({
-                   title: 'Vous approchez !',
-                   template: $scope.txtInfo
-                 });
+        function deg2rad(deg) {
+          return deg * (Math.PI/180)
+        };
 
-                 alertPopup.then(function(res) {
-                   console.log('Ca marche bien.');
-                   console.log($scope.txtInfo);
-                 });
+        $scope.positions.push({lat: pos.k,lng: pos.B});
+        $scope.posLat = parseFloat(position.coords.latitude) ;
+        $scope.posLong = parseFloat(position.coords.longitude) ;
+        $scope.distanceMetre = parseInt(getDistanceFromLatLonInKm($scope.targetLat, $scope.targetLng, $scope.posLat, $scope.posLong) * 1000);
 
-               };
-               $scope.showAlert();
-             }
-             else if ($scope.distanceMetre < 15) {
-                $scope.showAlert = function() {
-                 var alertPopup = $ionicPopup.alert({
-                   title: 'Bravo, vous avez atteind votre destination !',
-                   template: 'Vous devez réaliser toutes les épreuves de cette étape avant de pousuivre votre course <br> Bon courage ! '
-                 });
+        $scope.map.setCenter(pos);
+        $ionicLoading.hide();
 
-                 alertPopup.then(function(res) {
-                   console.log('Ca marche bien aussi.');
-                   
-                 });
-
-               };
-               $scope.showAlert();
-               
-             };
-
-             console.log('Position de la Target: ' + $scope.etape);
-             console.log('Latitude de la cible en cours: ' + $scope.targetLat);
-             console.log('Longitude de la cible en cours: ' + $scope.targetLng);
-             console.log('----------------------------------')        
-             console.log('Latitude du candidat en cours: ' + position.coords.latitude);
-             console.log('Longitude du candidat en cours: ' + position.coords.longitude);
-             console.log('Distance en kilomètres: ' + getDistanceFromLatLonInKm($scope.targetLat, $scope.targetLng, $scope.posLat, $scope.posLong) + ' km.');
-             console.log('Distance en mètres: ' + $scope.distanceMetre + ' Mètres.');
+        if ($scope.distanceMetre == 150) {
+          $scope.showAlert = function() {
+           var alertPopup = $ionicPopup.alert({
+             title: 'Vous approchez !',
+             template: $scope.txtInfo
            });
 
-};                    
+           alertPopup.then(function(res) {
+             console.log('Ca marche bien.');
+             console.log($scope.txtInfo);
+           });
 
+         };
+         $scope.showAlert();
+        }
+        else if ($scope.distanceMetre < 15) {
+          $scope.showAlert = function() {
+          var alertPopup = $ionicPopup.alert({
+            title: 'Bravo, vous avez atteind votre destination !',
+            template: 'Vous devez réaliser toutes les épreuves de cette étape avant de pousuivre votre course <br> Bon courage ! '
+          });
 
+          alertPopup.then(function(res) {
+            console.log('Ca marche bien aussi.');
+          });
+          };
+          $scope.showAlert();
+        };
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        console.log('Position de la Target: ' + $scope.etape);
+        console.log('Latitude de la cible en cours: ' + $scope.targetLat);
+        console.log('Longitude de la cible en cours: ' + $scope.targetLng);
+        console.log('----------------------------------')        
+        console.log('Latitude du candidat en cours: ' + position.coords.latitude);
+        console.log('Longitude du candidat en cours: ' + position.coords.longitude);
+        console.log('Distance en kilomètres: ' + getDistanceFromLatLonInKm($scope.targetLat, $scope.targetLng, $scope.posLat, $scope.posLong) + ' km.');
+        console.log('Distance en mètres: ' + $scope.distanceMetre + ' Mètres.');
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      });
+    };                    
 
+    var mapOptions = {
+      center: myLatlng,
+      zoom: 15,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
 
-var mapOptions = {
-  center: myLatlng,
-  zoom: 15,
-  mapTypeId: google.maps.MapTypeId.ROADMAP
-};
+    var map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
-var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+    $locations = [];
 
-$locations = [];
-
-$scope.map = map;
-$ionicLoading.hide();
+    $scope.map = map;
+    $ionicLoading.hide();
 
 google.maps.event.addListenerOnce($scope.map, 'idle', function () {
-          // Entering here when map finished loading
-          switch ($username) {
-            case 'Team_Spoutnik':
-            $locations = [
-            ['Vous y trouverez les meilleures capsules à emporter sur ApolloW@N', 47.2066045, -1.5531690000000253, 1],
-            ['Ils ont toujours la tchatche !', 47.207322, -1.5560915999999452, 2],
-            ['C\'est so chic de travailler avec eux', 47.2150355, -1.5627938999999742, 3],
-            [' Ils détiennent les meilleurs atouts de tout Nantes à emporter sur ApolloW@N', 47.2224825, -1.548170099999993, 4],
-            ['Si vous pouviez les enmener il seraient aux petits soins avec vous', 47.2179554, -1.5429547999999613, 5]
-            ];
-            break;
-            case 'Team_Gemini':
-            $locations = [
-            ['C\'est so chic de travailler avec eux', 47.2150355, -1.5627938999999742, 1],
-            [' Ils détiennent les meilleurs atouts de tout Nantes à emporter sur ApolloW@N', 47.2224825, -1.548170099999993, 2],
-            ['Si vous pouviez les enmener il seraient aux petits soins avec vous', 47.2179554, -1.5429547999999613, 3],
-            ['Ce stop se trouve à la frontière entre la réalité et le monde virtuel', 47.21400149999999, -1.5477815000000419, 4],
-            ['Ils élèvent des animaux à la couleur originale...', 47.20793319999999, -1.5359321999999338, 5]
-            ];
-            break;
-            case 'Team_Soyouz':
-            $locations = [
-            ['Si vous pouviez les enmener il seraient aux petits soins avec vous', 47.2179554, -1.5429547999999613, 1],
-            ['Ce stop se trouve à la frontière entre la réalité et le monde virtuel', 47.21400149999999, -1.5477815000000419, 2],
-            ['Ils élèvent des animaux à la couleur originale...', 47.20793319999999, -1.5359321999999338, 3],
-            ['Vous y trouverez la dernière tribu indienne de Nantes', 47.206329, -1.5461609999999837, 4],
-            ['Vous y trouverez les meilleures capsules à emporter sur ApolloW@N', 47.2066045, -1.5531690000000253, 5]
-            ];
-            break;
-            case 'Team_Ariane':
-            $locations = [
-            ['Ce stop se trouve à la frontière entre la réalité et le monde virtuel', 47.21400149999999, -1.5477815000000419, 1],
-            ['Ils élèvent des animaux à la couleur originale...', 47.20793319999999, -1.5359321999999338, 2],
-            ['Vous y trouverez la dernière tribu indienne de Nantes', 47.206329, -1.5461609999999837, 3],
-            ['Vous y trouverez les meilleures capsules à emporter sur ApolloW@N', 47.2066045, -1.5531690000000253, 4],
-            ['Ils ont toujours la tchatche !', 47.207322, -1.5560915999999452, 5]
-            ];
-            break;
-            case 'Team_Galileo':
-            $locations = [
-            ['Vous y trouverez la dernière tribu indienne de Nantes', 47.206329, -1.5461609999999837, 1],
-            ['Vous y trouverez les meilleures capsules à emporter sur ApolloW@N', 47.2066045, -1.5531690000000253, 2],
-            ['Ils ont toujours la tchatche !', 47.207322, -1.5560915999999452, 3],
-            ['C\'est so chic de travailler avec eux', 47.2150355, -1.5627938999999742, 4],
-            [' Ils détiennent les meilleurs atouts de tout Nantes à emporter sur ApolloW@N', 47.2224825, -1.548170099999993, 5]
-            ];
-            break;
-            default:
-          }
-
-
+// Entering here when map finished loading
+  switch ($username) {
+    case 'Team_Spoutnik':
+      $locations = [
+        ['Vous y trouverez les meilleures capsules à emporter sur ApolloW@N', 47.2066045, -1.5531690000000253, 1],
+        ['Ils ont toujours la tchatche !', 47.207322, -1.5560915999999452, 2],
+        ['C\'est so chic de travailler avec eux', 47.2150355, -1.5627938999999742, 3],
+        [' Ils détiennent les meilleurs atouts de tout Nantes à emporter sur ApolloW@N', 47.2224825, -1.548170099999993, 4],
+        ['Si vous pouviez les enmener il seraient aux petits soins avec vous', 47.2179554, -1.5429547999999613, 5]
+      ];
+      break;
+    case 'Team_Gemini':
+      $locations = [
+        ['C\'est so chic de travailler avec eux', 47.2150355, -1.5627938999999742, 1],
+        [' Ils détiennent les meilleurs atouts de tout Nantes à emporter sur ApolloW@N', 47.2224825, -1.548170099999993, 2],
+        ['Si vous pouviez les enmener il seraient aux petits soins avec vous', 47.2179554, -1.5429547999999613, 3],
+        ['Ce stop se trouve à la frontière entre la réalité et le monde virtuel', 47.21400149999999, -1.5477815000000419, 4],
+        ['Ils élèvent des animaux à la couleur originale...', 47.20793319999999, -1.5359321999999338, 5]
+      ];
+      break;
+    case 'Team_Soyouz':
+      $locations = [
+        ['Si vous pouviez les enmener il seraient aux petits soins avec vous', 47.2179554, -1.5429547999999613, 1],
+        ['Ce stop se trouve à la frontière entre la réalité et le monde virtuel', 47.21400149999999, -1.5477815000000419, 2],
+        ['Ils élèvent des animaux à la couleur originale...', 47.20793319999999, -1.5359321999999338, 3],
+        ['Vous y trouverez la dernière tribu indienne de Nantes', 47.206329, -1.5461609999999837, 4],
+        ['Vous y trouverez les meilleures capsules à emporter sur ApolloW@N', 47.2066045, -1.5531690000000253, 5]
+      ];
+      break;
+    case 'Team_Ariane':
+      $locations = [
+        ['Ce stop se trouve à la frontière entre la réalité et le monde virtuel', 47.21400149999999, -1.5477815000000419, 1],
+        ['Ils élèvent des animaux à la couleur originale...', 47.20793319999999, -1.5359321999999338, 2],
+        ['Vous y trouverez la dernière tribu indienne de Nantes', 47.206329, -1.5461609999999837, 3],
+        ['Vous y trouverez les meilleures capsules à emporter sur ApolloW@N', 47.2066045, -1.5531690000000253, 4],
+        ['Ils ont toujours la tchatche !', 47.207322, -1.5560915999999452, 5]
+      ];
+      break;
+    case 'Team_Galileo':
+      $locations = [
+        ['Vous y trouverez la dernière tribu indienne de Nantes', 47.206329, -1.5461609999999837, 1],
+        ['Vous y trouverez les meilleures capsules à emporter sur ApolloW@N', 47.2066045, -1.5531690000000253, 2],
+        ['Ils ont toujours la tchatche !', 47.207322, -1.5560915999999452, 3],
+        ['C\'est so chic de travailler avec eux', 47.2150355, -1.5627938999999742, 4],
+        [' Ils détiennent les meilleurs atouts de tout Nantes à emporter sur ApolloW@N', 47.2224825, -1.548170099999993, 5]
+      ];
+      break;
+    default:
+  }
           /* Ne pas boucler sur tous les $locations, ne déclencher que la première (cf addMarker ci-dessous)
           var marker, i;
           for (i = 0; i < $locations.length; i++) {
@@ -346,8 +338,8 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function () {
           */
 
           // Show first marker
-          addMarker(0);
-        });
+  addMarker(0);
+});
 
         /* Commenté car inutile ?
         var map = new google.maps.Map(document.getElementById('map'), {
@@ -361,56 +353,48 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function () {
          * Show a specific marker and handle events
          * @param {integer} cursor
          */
-         const addMarker = function (cursor) {
+addMarker = function (cursor) {
 
+  function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(lat2-lat1);  // deg2rad below
+    var dLon = deg2rad(lon2-lon1); 
+    var a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2)
+    ; 
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    var d = R * c; // Distance in km
+    return d;
+  };
 
+  function deg2rad(deg) {
+    return deg * (Math.PI/180)
+  };
 
+  let infowindow = new google.maps.InfoWindow();
+  $scope.currentMarker = null;
+  if ($locations[cursor]) {
+// Create marker
+    marker = new google.maps.Marker({
+      position: new google.maps.LatLng($locations[cursor][1], $locations[cursor][2]),
+      animation: google.maps.Animation.DROP,
+      map: map
+    });
 
-
-
-          function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
-                var R = 6371; // Radius of the earth in km
-                var dLat = deg2rad(lat2-lat1);  // deg2rad below
-                var dLon = deg2rad(lon2-lon1); 
-                var a = 
-                Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
-                Math.sin(dLon/2) * Math.sin(dLon/2)
-                ; 
-                var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-                var d = R * c; // Distance in km
-                return d;
-              };
-
-              function deg2rad(deg) {
-                return deg * (Math.PI/180)
-              };
-
-
-
-
-              let infowindow = new google.maps.InfoWindow();
-              $scope.currentMarker = null;
-              if ($locations[cursor]) {
-            // Create marker
-            marker = new google.maps.Marker({
-              position: new google.maps.LatLng($locations[cursor][1], $locations[cursor][2]),
-              animation: google.maps.Animation.DROP,
-              map: map
-            });
-
-            // Add click event listener on marker
-            google.maps.event.addListener(marker, 'click', (function (marker, marker_cursor) {
-              return function () {
-                infowindow.setContent($locations[marker_cursor][0]);
-                infowindow.open(map, marker);
-                $scope.currentMarker = this;
-                //console.log(currentMarker.position);
-                $scope.etape = $scope.currentMarker.position;
-                $scope.targetLat = parseFloat($locations[cursor][1]);
-                $scope.targetLng = parseFloat($locations[cursor][2]);
-                $scope.distanceMetre = parseInt(getDistanceFromLatLonInKm($scope.targetLat, $scope.targetLng, $scope.posLat, $scope.posLong) * 1000);
-                $scope.txtInfo = $locations[marker_cursor][0];
+// Add click event listener on marker
+    google.maps.event.addListener(marker, 'click', (function (marker, marker_cursor) {
+      return function () {
+        infowindow.setContent($locations[marker_cursor][0]);
+        infowindow.open(map, marker);
+        $scope.currentMarker = this;
+        //console.log(currentMarker.position);
+        $scope.etape = $scope.currentMarker.position;
+        $scope.targetLat = parseFloat($locations[cursor][1]);
+        $scope.targetLng = parseFloat($locations[cursor][2]);
+        $scope.distanceMetre = parseInt(getDistanceFromLatLonInKm($scope.targetLat, $scope.targetLng, $scope.posLat, $scope.posLong) * 1000);
+        $scope.txtInfo = $locations[marker_cursor][0];
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -431,26 +415,26 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function () {
                 //console.log($scope.txtInfo);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-}
-})(marker, cursor));
+      }
+    })(marker, cursor));
 
-            // Add close event listener on marker information window
-            google.maps.event.addListener(infowindow, 'closeclick', (function (marker, marker_cursor) {
-              return function () {
-                $scope.currentMarker.setMap(null);
-                addMarker(++cursor);
-              }
-            })(marker, cursor));
+// Add close event listener on marker information window
+  google.maps.event.addListener(infowindow, 'closeclick', (function (marker, marker_cursor) {
+    return function () {
+      $scope.currentMarker.setMap(null);
+      addMarker(++cursor);
+    }
+  })(marker, cursor));
 
-            // Manually trigger click on marker to show first marker and its info window
-            setTimeout(function () { // Wait for 750ms before showing the info window to smooth the drop animation
-              google.maps.event.trigger(marker, 'click');
-            }, 750);
-          } else {
-            // End of the road
-            alert('Félicitations ! Vous avez franchi toutes les étapes ! Rendez vous au point de ralliement !');
-          }
-        };
+// Manually trigger click on marker to show first marker and its info window
+  setTimeout(function () { // Wait for 750ms before showing the info window to smooth the drop animation
+    google.maps.event.trigger(marker, 'click');
+  }, 750);
+  } else {
+    // End of the road
+    alert('Félicitations ! Vous avez franchi toutes les étapes ! Rendez vous au point de ralliement !');
+  }
+};
         /*
       }, function (err) {
         $ionicLoading.hide();
@@ -460,45 +444,36 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function () {
 
       //console.log("Ctrl");
 
-      $scope.lastMarker = null;
-      window.setInterval(function(){
-        //console.log("___________________________________");  
-        //console.log( $scope.lastMarker);
-        navigator.geolocation.getCurrentPosition(function(position) {
-            //console.log($scope.lastMarker);
+$scope.lastMarker = null;
+window.setInterval(function(){
+  //console.log("___________________________________");  
+  //console.log( $scope.lastMarker);
+  navigator.geolocation.getCurrentPosition(function(position) {
+    //console.log($scope.lastMarker);
 
-            var pos = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            };
-
-
-            if($scope.lastMarker != null)
-              $scope.lastMarker.setMap(null);
+    var pos = {
+      lat: position.coords.latitude,
+      lng: position.coords.longitude
+    };
 
 
-            $scope.lastMarker = new google.maps.Marker({
-              position: pos,
-              //icon: "/img/ionic.png",
-              map: map
-            });
-            //console.log(self);
-            
-            //map.setCenter(pos);
-          }, function() {
-            handleLocationError(true, infoWindow, map.getCenter());
-          });
-      }, 1000);
-
-
-
-
-
-
-
-    }).catch((err) => {
-      console.log('Err', err);
+    if($scope.lastMarker != null)
+      $scope.lastMarker.setMap(null);
+      $scope.lastMarker = new google.maps.Marker({
+        position: pos,
+        //icon: "/img/ionic.png",
+        map: map
+      });
+      //console.log(self);
+      
+      //map.setCenter(pos);
+  }, function() {
+    handleLocationError(true, infoWindow, map.getCenter());
     });
+}, 1000);
+}).catch((err) => {
+    console.log('Err', err);
+  });
   })
 
 .controller('TeamsCtrl', function ($scope) {
@@ -529,18 +504,21 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function () {
 
 
 .controller('DashCtrl', function ($scope, $cordovaCamera, $cordovaFile, $cordovaBarcodeScanner) {
-      $scope.share = function(t, msg, img, link){  
-        if(t == 't')
-            window.plugins.socialsharing
-            .shareViaTwitter(msg, img, link);    
-           
-        else
-        {
-            var sub = 'Beautiful images inside ..';
-            window.plugins.socialsharing
-            .shareViaEmail(msg, sub, '');        
-        }    
-    }
+  $scope.actions = '';
+  $scope.share = function(t, msg, link){ 
+    $scope.actions = 'click button'; 
+
+    if(t == 't')
+      window.plugins.socialsharing
+    .shareViaTwitter(msg, $scope.images, link);    
+
+    else
+    {
+      var sub = 'Beautiful images inside ..';
+      window.plugins.socialsharing
+      .shareViaEmail(msg, sub, '');        
+    }    
+  }
 
   $scope.scanBarcode = function() {
     $cordovaBarcodeScanner.scan().then(function(imageData) {
@@ -578,9 +556,11 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function () {
 
         function onImageSuccess(fileURI) {
           createFileEntry(fileURI);
+          
         }
 
         function createFileEntry(fileURI) {
+          $scope.actions = fileURI;
           window.resolveLocalFileSystemURL(fileURI, copyFile, fail);
         }
 
@@ -603,8 +583,9 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function () {
         // 6
         function onCopySuccess(entry) {
           $scope.$apply(function () {
+            $scope.images = [];
             $scope.images.push(entry.nativeURL);
-
+            $scope.share('t','#run2wan', '');
           });
 
         }
@@ -633,13 +614,4 @@ $scope.urlForImage = function (imageName) {
   return trueOrigin;
 }
 
-})
-
-.controller('shareCtrl', ['$scope', function ($scope) {
-
-  $scope.twitterShare = function () {
-    window.plugins.socialsharing.shareViaTwitter('Digital Signature Maker', null /* img */, 'https://play.google.com/store/apps/details?id=com.prantikv.digitalsignaturemaker', null, function (errormsg) { alert("Erreur: Impossible de partager") });
-  }
-
-
-}]);
+});
