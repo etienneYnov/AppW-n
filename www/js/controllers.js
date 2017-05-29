@@ -1,4 +1,16 @@
 angular.module('starter.controllers', [])
+.service('etapeSuivante', function () {
+  var nbCurrMarker = 0;
+
+  return {
+    getNbCurrMarker: function(){
+      return nbCurrMarker;
+    },
+    setNbCurrMarker: function(value){
+      nbCurrMarker = value;
+    },
+  }
+})
 
 .controller('AppCtrl', function ($scope, $ionicModal, $timeout, $state) {
 
@@ -154,7 +166,10 @@ angular.module('starter.controllers', [])
 
 
 
-.controller('MapCtrl', function ($scope, $cordovaGeolocation, $ionicLoading, $ionicPlatform, $ionicPopup) {
+.controller('MapCtrl', function ($scope, $cordovaGeolocation, $ionicLoading, $ionicPlatform, $ionicPopup, etapeSuivante) {
+
+  console.log(etapeSuivante.getNbCurrMarker());
+
   $ionicPlatform.ready(function () {
     var posOptions = {
       enableHighAccuracy: true,
@@ -338,7 +353,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function () {
           */
 
           // Show first marker
-  addMarker(0);
+  addMarker(etapeSuivante.getNbCurrMarker());
 });
 
         /* Commenté car inutile ?
@@ -389,7 +404,6 @@ addMarker = function (cursor) {
         infowindow.setContent($locations[marker_cursor][0]);
         infowindow.open(map, marker);
         $scope.currentMarker = this;
-        //console.log(currentMarker.position);
         $scope.etape = $scope.currentMarker.position;
         $scope.targetLat = parseFloat($locations[cursor][1]);
         $scope.targetLng = parseFloat($locations[cursor][2]);
@@ -419,12 +433,12 @@ addMarker = function (cursor) {
     })(marker, cursor));
 
 // Add close event listener on marker information window
-  google.maps.event.addListener(infowindow, 'closeclick', (function (marker, marker_cursor) {
+/*  google.maps.event.addListener(infowindow, 'closeclick', (function (marker, marker_cursor) {
     return function () {
       $scope.currentMarker.setMap(null);
       addMarker(++cursor);
     }
-  })(marker, cursor));
+  })(marker, cursor));*/
 
 // Manually trigger click on marker to show first marker and its info window
   setTimeout(function () { // Wait for 750ms before showing the info window to smooth the drop animation
@@ -467,8 +481,8 @@ window.setInterval(function(){
       //console.log(self);
       
       //map.setCenter(pos);
-  }, function() {
-    handleLocationError(true, infoWindow, map.getCenter());
+  }, function(e) {
+    console.log(e);
     });
 }, 1000);
 }).catch((err) => {
@@ -503,7 +517,7 @@ window.setInterval(function(){
 
 
 
-.controller('DashCtrl', function ($scope, $cordovaCamera, $cordovaFile, $cordovaBarcodeScanner) {
+.controller('DashCtrl', function ($scope, $cordovaCamera, $cordovaFile, $cordovaBarcodeScanner, $state, etapeSuivante) {
   $scope.actions = '';
   $scope.share = function(t, msg, link){ 
     $scope.actions = 'click button'; 
@@ -586,6 +600,8 @@ window.setInterval(function(){
             $scope.images = [];
             $scope.images.push(entry.nativeURL);
             $scope.share('t','#run2wan', '');
+            etapeSuivante.setNbCurrMarker(etapeSuivante.getNbCurrMarker() + 1);
+            $state.go("app.map");
           });
 
         }
