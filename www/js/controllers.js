@@ -436,7 +436,7 @@ window.setInterval(function(){
       $scope.lastMarker.setMap(null);
       $scope.lastMarker = new google.maps.Marker({
         position: pos,
-        icon: "/img/female-2.png",
+        icon: "img/female-2.png",
         map: map
       });
     
