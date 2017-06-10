@@ -183,7 +183,7 @@ angular.module('starter.controllers', [])
       // Debug values...
     var lat = 47.208796;
     var long = -1.550337;
-    $username = 'Team_Spoutnik';
+    //$username = 'Team_Spoutnik';
 
     var myLatlng = new google.maps.LatLng(lat, long);
 
