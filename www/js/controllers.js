@@ -183,7 +183,7 @@ angular.module('starter.controllers', [])
       // Debug values...
     var lat = 47.208796;
     var long = -1.550337;
-    //$username = 'Team_Spoutnik';
+    $username = $scope.loginData.username;
 
     var myLatlng = new google.maps.LatLng(lat, long);
 
@@ -257,7 +257,7 @@ angular.module('starter.controllers', [])
           $scope.showAlert();
         };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         console.log('Position de la Target: ' + $scope.etape);
         console.log('Latitude de la cible en cours: ' + $scope.targetLat);
         console.log('Longitude de la cible en cours: ' + $scope.targetLng);
@@ -266,7 +266,7 @@ angular.module('starter.controllers', [])
         console.log('Longitude du candidat en cours: ' + position.coords.longitude);
         console.log('Distance en kilomètres: ' + getDistanceFromLatLonInKm($scope.targetLat, $scope.targetLng, $scope.posLat, $scope.posLong) + ' km.');
         console.log('Distance en mètres: ' + $scope.distanceMetre + ' Mètres.');
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
       });
     };                    
 
@@ -333,41 +333,12 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function () {
       break;
     default:
   }
-          /* Ne pas boucler sur tous les $locations, ne déclencher que la première (cf addMarker ci-dessous)
-          var marker, i;
-          for (i = 0; i < $locations.length; i++) {
-            marker = new google.maps.Marker({
-              position: new google.maps.LatLng($locations[i][1], $locations[i][2]),
-              animation: google.maps.Animation.DROP,
-              map: map
-            });
   
-            google.maps.event.addListener(marker, 'click', (function (marker, i) {
-              return function () {
-                var infowindow = new google.maps.InfoWindow();
-                infowindow.setContent($locations[i][0]);
-                infowindow.open(map, marker);
-              }
-            })(marker, i));
-          }
-          */
-
           // Show first marker
   addMarker(etapeSuivante.getNbCurrMarker());
 });
 
-        /* Commenté car inutile ?
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 10,
-          center: new google.maps.LatLng(47.2155761, -1.5490890999999465),
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        });
-*/
 
-        /**
-         * Show a specific marker and handle events
-         * @param {integer} cursor
-         */
 addMarker = function (cursor) {
 
   function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
@@ -449,21 +420,11 @@ addMarker = function (cursor) {
     alert('Félicitations ! Vous avez franchi toutes les étapes ! Rendez vous au point de ralliement !');
   }
 };
-        /*
-      }, function (err) {
-        $ionicLoading.hide();
-        console.log(err);
-      });
-*/
-
-      //console.log("Ctrl");
 
 $scope.lastMarker = null;
 window.setInterval(function(){
-  //console.log("___________________________________");  
-  //console.log( $scope.lastMarker);
+
   navigator.geolocation.getCurrentPosition(function(position) {
-    //console.log($scope.lastMarker);
 
     var pos = {
       lat: position.coords.latitude,
@@ -478,8 +439,7 @@ window.setInterval(function(){
         icon: "/img/female-2.png",
         map: map
       });
-      //console.log(self);
-      
+    
       //map.setCenter(pos);
   }, function(e) {
     console.log(e);
@@ -505,15 +465,6 @@ window.setInterval(function(){
   { title: 'Team_Shenzhou', id: 11, password: "txa436tx" }
   ];
 })
-
-  /*.controller('TeamCtrl', function($scope, $stateParams) {
-  })*/
-
-
-
-
-
-
 
 
 
